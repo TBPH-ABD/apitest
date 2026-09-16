@@ -1,0 +1,16 @@
+{
+  "base_url": "https://api.example.com/v1/",
+
+  "_comment": "auth_headers are sent on the checks that need an authenticated session. Never commit real tokens — read them from your environment and inject them at run time.",
+  "auth_headers": {
+    "Authorization": "Bearer REPLACE_WITH_YOUR_TEST_TOKEN"
+  },
+
+  "endpoints": [
+    { "path": "users/me",      "method": "GET",  "auth_required": true },
+    { "path": "users",         "method": "GET",  "auth_required": true },
+    { "path": "orders",        "method": "GET",  "auth_required": true },
+    { "path": "health",        "method": "GET",  "auth_required": false },
+    { "path": "auth/login",    "method": "POST", "auth_required": false }
+  ]
+}
