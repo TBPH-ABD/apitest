@@ -117,6 +117,23 @@ check sends a small burst (12 requests by default) — it is a probe, not a load
 test, and it is off unless you ask for it. The `--authorized` flag makes your
 permission explicit.
 
+## Tests
+
+57 tests, 95% line coverage. No dependencies, and **no test contacts a
+real external service** — network-facing code is exercised against local fake
+servers bound to an ephemeral port.
+
+```bash
+# Run the suite
+python3 -m unittest discover -s tests -v
+
+# Fail on any leaked socket, file, or database connection
+python3 -W error::ResourceWarning -m unittest discover -s tests
+```
+
+CI runs the suite on Python 3.10–3.13 on every push, plus a coverage gate and a
+3.10 syntax check. See [.github/workflows/tests.yml](.github/workflows/tests.yml).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

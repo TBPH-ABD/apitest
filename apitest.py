@@ -91,10 +91,14 @@ def request(url: str, method: str = "GET", headers: dict | None = None,
                             resp.read(100_000).decode("utf-8", "replace"),
                             (time.perf_counter() - started) * 1000)
     except urllib.error.HTTPError as exc:
-        return Response(exc.code,
-                        {k.lower(): v for k, v in (exc.headers or {}).items()},
-                        (exc.read(50_000) or b"").decode("utf-8", "replace"),
-                        (time.perf_counter() - started) * 1000)
+        # An HTTPError is a response object holding an open buffer. A scan
+        # makes hundreds of these, so it must be closed, not left to the GC.
+        with exc:
+            return Response(
+                exc.code,
+                {k.lower(): v for k, v in (exc.headers or {}).items()},
+                (exc.read(50_000) or b"").decode("utf-8", "replace"),
+                (time.perf_counter() - started) * 1000)
     except (urllib.error.URLError, OSError, ssl.SSLError):
         return None
 
